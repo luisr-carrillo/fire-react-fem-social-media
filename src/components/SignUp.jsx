@@ -18,7 +18,6 @@ const SignUp = () => {
                 email,
                 password
             );
-
             createUserProfileDocument(user, { displayName });
         } catch (error) {
             console.log('Error de firebase: ', error);

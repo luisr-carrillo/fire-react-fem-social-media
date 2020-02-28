@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import useFormFields from '../hooks/useFormFields';
-import { firestore, auth } from '../firebase';
+import { firestore } from '../firebase';
+import { UserContext } from '../context/UserProvider';
 
 const AddPost = () => {
+    const user = useContext(UserContext);
     const [newPostFields, setNewPostFields] = useFormFields({
         title: '',
         content: '',
     });
+    const { uid, displayName, email, photoURL } = user || {};
     const { title, content } = newPostFields;
-    const { uid, displayName, email, photoURL } = auth.currentUser || {};
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         const post = {
             title,
             content,

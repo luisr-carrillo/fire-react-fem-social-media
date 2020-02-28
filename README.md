@@ -1,5 +1,5 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Firebase Fullstack Simple App
 
-## My React Boilerplate
+Aplicación simple con Firebase Auth, Hosting, Database(Firestore) y Cloud Functions.
 
-Estructura inicial para proyectos React
+Proyecto de clase de @stevekinney para Front-End Masters

@@ -8,8 +8,13 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (userAuth) => {
-            const createdUser = await createUserProfileDocument(userAuth);
-            setUser(createdUser);
+            if (userAuth) {
+                const userRef = await createUserProfileDocument(userAuth);
+                userRef.onSnapshot((snapshot) => {
+                    setUser({ uid: snapshot.id, ...snapshot.data() });
+                });
+            }
+            setUser(userAuth);
         });
 
         return () => unsubscribe();

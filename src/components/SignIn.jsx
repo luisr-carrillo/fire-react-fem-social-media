@@ -1,6 +1,6 @@
 import React from 'react';
 import useFormFields from '../hooks/useFormFields';
-import { signInWithGoogle } from '../firebase';
+import { auth, signInWithGoogle } from '../firebase';
 
 const SignIn = () => {
     const [loginFields, setLoginFields] = useFormFields({
@@ -9,9 +9,17 @@ const SignIn = () => {
     });
     const { email, password } = loginFields;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
+        await auth
+            .signInWithEmailAndPassword(email, password)
+            .then((result) => {
+                console.log('[SignIn] | result: ', result);
+            })
+            .catch((error) => {
+                console.error('[SignIn] | error: ', error);
+            });
         setLoginFields();
     };
 

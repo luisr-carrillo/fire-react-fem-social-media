@@ -1,38 +1,26 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
-class AddComment extends Component {
-    state = { content: '' };
+const AddComment = ({ onCreate }) => {
+    const [content, setContent] = useState('');
 
-    handleChange = (event) => {
-        const { name, value } = event.target;
-        this.setState({ [name]: value });
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onCreate(content);
+        setContent('');
     };
 
-    handleSubmit = (event) => {
-        event.preventDefault();
-
-        this.setState({ content: '' });
-    };
-
-    render() {
-        const { content } = this.state;
-        return (
-            <form onSubmit={this.handleSubmit} className="AddComment">
-                <input
-                    type="text"
-                    name="content"
-                    placeholder="Comment"
-                    value={content}
-                    onChange={this.handleChange}
-                />
-                <input
-                    className="create"
-                    type="submit"
-                    value="Create Comment"
-                />
-            </form>
-        );
-    }
-}
+    return (
+        <form onSubmit={handleSubmit} className="AddComment">
+            <input
+                type="text"
+                name="content"
+                placeholder="Comment"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+            />
+            <input className="create" type="submit" value="Create Comment" />
+        </form>
+    );
+};
 
 export default AddComment;

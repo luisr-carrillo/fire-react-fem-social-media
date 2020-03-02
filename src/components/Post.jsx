@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import { firestore } from '../firebase';
 import { UserContext } from '../context/UserProvider';
 
-const Post = ({ id, title, content, user, createdAt, stars, comments }) => {
+const Post = ({ id, title, content, user, createdAt, favorites, comments }) => {
     const authUser = useContext(UserContext);
 
     const postRef = firestore.doc(`posts/${id}`);
     const handleRemove = () => postRef.delete();
-    const handleStar = () => postRef.update({ stars: stars + 1 });
+    const handleStar = () => postRef.update({ favorites: favorites + 1 });
 
     const belongsToCurrentUser = (currentUser, postAuthor) => {
         if (!currentUser) return false;
@@ -30,7 +30,7 @@ const Post = ({ id, title, content, user, createdAt, stars, comments }) => {
                         <span role="img" aria-label="star">
                             ⭐️
                         </span>
-                        {stars}
+                        {favorites}
                     </p>
                     <p>
                         <span role="img" aria-label="comments">
@@ -58,21 +58,6 @@ const Post = ({ id, title, content, user, createdAt, stars, comments }) => {
             </div>
         </article>
     );
-};
-
-Post.defaultProps = {
-    title: 'An Incredibly Hot Take',
-    content:
-        'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ducimus est aut dolorem, dolor voluptatem assumenda possimus officia blanditiis iusto porro eaque non ab autem nihil! Alias repudiandae itaque quo provident.',
-    user: {
-        id: '123',
-        displayName: 'Bill Murray',
-        email: 'billmurray@mailinator.com',
-        photoURL: 'https://www.fillmurray.com/300/300',
-    },
-    createdAt: new Date(),
-    stars: 0,
-    comments: 0,
 };
 
 export default Post;

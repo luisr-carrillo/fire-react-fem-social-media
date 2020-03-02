@@ -1,18 +1,31 @@
 import React, { useState } from 'react';
-import { auth, firestore } from '../firebase';
+import { auth, firestore, storage } from '../firebase';
 
 const UserProfile = () => {
-    const [userDisplayName, setUserDisplayName] = useState('');
+    const [displayNameField, setDisplayNameField] = useState('');
     const [imgInput, setImgInput] = useState(null);
 
     const userUid = () => auth.currentUser.uid;
     const userRef = () => firestore.doc(`users/${userUid()}`);
+    const userFile = () => imgInput && imgInput.files[0];
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (userDisplayName) {
-            userRef().update({ displayName: userDisplayName });
+        if (displayNameField.trim() !== '') {
+            userRef().update({ displayName: displayNameField });
+            setDisplayNameField('');
+        }
+
+        if (userFile()) {
+            storage
+                .ref()
+                .child('user-profiles')
+                .child(userUid())
+                .child(userFile().name)
+                .put(userFile())
+                .then((snapshot) => snapshot.ref.getDownloadURL())
+                .then((photoURL) => userRef().update({ photoURL }));
         }
     };
 
@@ -21,9 +34,9 @@ const UserProfile = () => {
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
-                    value={userDisplayName}
+                    value={displayNameField}
                     name="userDisplayName"
-                    onChange={(e) => setUserDisplayName(e.target.value)}
+                    onChange={(e) => setDisplayNameField(e.target.value)}
                     placeholder="Display Name"
                 />
                 <input type="file" ref={(ref) => setImgInput(ref)} />
